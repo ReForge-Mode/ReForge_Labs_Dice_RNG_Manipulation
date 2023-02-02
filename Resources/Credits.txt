@@ -1,1 +1,4 @@
-DICE: https://opengameart.org/content/3d-dice (Need attribution)
+OCTAHEDRON MODEL: https://sketchfab.com/3d-models/octahedron-4fcfa8c0265746448e92e314dccd364c
+
+DICE SOUND: https://freesound.org/people/andresix/sounds/347807/
+DICE DING: https://freesound.org/people/f-r-a-g-i-l-e/sounds/447141/
