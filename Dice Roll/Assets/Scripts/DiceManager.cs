@@ -5,12 +5,14 @@ using UnityEngine;
 public class DiceManager : MonoBehaviour
 {
     public GameObject dicePrefab;
-    public int generateNumber = 8;
-    public List<GameObject> diceList;
+    public AnimationRecorder animRecorder;
 
     [Header("Initial State")]
+    public int generateNumber = 8;
     public float maxForce = 50;
-    public float maxTorque = 50;
+
+    [Header("Debug")]
+    public List<GameObject> diceList;
 
     private void Update()
     {
@@ -28,6 +30,7 @@ public class DiceManager : MonoBehaviour
             {
                 GenerateDice();
             }
+            animRecorder.SetRecordTargets(diceList);
         }
     }
 
@@ -44,13 +47,11 @@ public class DiceManager : MonoBehaviour
 
         //Add force
         Vector3 initialForce = new Vector3(Random.Range(0, maxForce), -Random.Range(0, maxForce), Random.Range(0, maxForce));
-        Vector3 initialTorque = new Vector3(Random.Range(0, maxTorque), Random.Range(0, maxTorque), Random.Range(0, maxTorque));
 
         //Generate dice, Set the position and rotation
         GameObject temp     = Instantiate(dicePrefab, initialPosition, initialRotation);
         Rigidbody rb        = temp.GetComponent<Rigidbody>();
         rb.velocity         = initialForce;
-        rb.AddTorque(initialTorque);
 
         diceList.Add(temp);
     }
