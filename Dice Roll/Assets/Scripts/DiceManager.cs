@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class DiceManager : MonoBehaviour
@@ -10,6 +11,9 @@ public class DiceManager : MonoBehaviour
     [Header("Initial State")]
     public int generateNumber = 8;
     public float maxForce = 50;
+
+    [Header("Final Result")]
+    public List<Elements> alteredResult;
 
     [Header("Debug")]
     public List<GameObject> diceList;
@@ -30,7 +34,10 @@ public class DiceManager : MonoBehaviour
             {
                 GenerateDice();
             }
-            animRecorder.SetRecordTargets(diceList);
+
+            //Start the simulation
+            //animRecorder.SetRecordTargets(diceList);
+            //each dice
         }
     }
 

@@ -15,12 +15,12 @@ public class DiceLogic : MonoBehaviour
 
     [Header("Debug")]
     public bool isNotMoving = false;
+    public bool isSimulated = false;
 
     private void Update()
     {
         CheckWhenStopMoving();
     }
-
 
     private void CheckWhenStopMoving()
     {
