@@ -7,108 +7,64 @@ using UnityEngine.Events;
 public class UIDiceGuarantee : MonoBehaviour
 {
     public int totalCount = 0;
-    public DiceGuaranteeCount diceGuaranteeCount;
+    public int maxCount;
+    public List<int> diceGuaranteeCount;
+    public DiceManager2 diceManager;
     public TextMeshProUGUI countText;
-    public List<TextMeshProUGUI> elementCountText;
 
-    public UnityEvent onMinValue;
-    public UnityEvent onMaxValue;
-    public UnityEvent onNormalValue;
+    public List<UiDiceElement> diceElementList;
 
     public void Awake()
     {
-        onMinValue.Invoke();
+        maxCount = diceManager.generateAmount;
+        totalCount = 0;
     }
 
-    public void AddCount(int elementIndex)
+    public void UpdateElementCount(int elementIndex, int value)
     {
-        if (totalCount < 8)
-        {
-            int i = (elementIndex);
-            switch (i)
-            {
-                case 0: diceGuaranteeCount.Cryo++; break;
-                case 1: diceGuaranteeCount.Dendro++; break;
-                case 2: diceGuaranteeCount.Electro++; break;
-                case 3: diceGuaranteeCount.Anemo++; break;
-                case 4: diceGuaranteeCount.Omni++; break;
-                case 5: diceGuaranteeCount.Geo++; break;
-                case 6: diceGuaranteeCount.Pyro++; break;
-                case 7: diceGuaranteeCount.Hydro++; break;
-            }
+        diceGuaranteeCount[elementIndex] = value;
 
-            UpdateElementCount();
-            countText.text = totalCount.ToString();
-        }
-    }
-
-    public void ReduceCount(int elementIndex)
-    {
-        if (totalCount > 0)
-        {
-            switch (elementIndex)
-            {
-                case 0: diceGuaranteeCount.Cryo--; break;
-                case 1: diceGuaranteeCount.Dendro--; break;
-                case 2: diceGuaranteeCount.Electro--; break;
-                case 3: diceGuaranteeCount.Anemo--; break;
-                case 4: diceGuaranteeCount.Omni--; break;
-                case 5: diceGuaranteeCount.Geo--; break;
-                case 6: diceGuaranteeCount.Pyro--; break;
-                case 7: diceGuaranteeCount.Hydro--; break;
-            }
-
-            UpdateElementCount();
-            countText.text = totalCount.ToString();
-        }
-    }
-
-    public void UpdateElementCount()
-    {
         //Count all elements
         totalCount = 0;
-        totalCount += diceGuaranteeCount.Cryo;
-        totalCount += diceGuaranteeCount.Dendro;
-        totalCount += diceGuaranteeCount.Electro;
-        totalCount += diceGuaranteeCount.Anemo;
-        totalCount += diceGuaranteeCount.Omni;
-        totalCount += diceGuaranteeCount.Geo;
-        totalCount += diceGuaranteeCount.Pyro;
-        totalCount += diceGuaranteeCount.Hydro;
-
-        //Update the text
-        elementCountText[0].text = diceGuaranteeCount.Cryo.ToString();
-        elementCountText[1].text = diceGuaranteeCount.Dendro.ToString();
-        elementCountText[2].text = diceGuaranteeCount.Electro.ToString();
-        elementCountText[3].text = diceGuaranteeCount.Anemo.ToString();
-        elementCountText[4].text = diceGuaranteeCount.Omni.ToString();
-        elementCountText[5].text = diceGuaranteeCount.Geo.ToString();
-        elementCountText[6].text = diceGuaranteeCount.Pyro.ToString();
-        elementCountText[7].text = diceGuaranteeCount.Hydro.ToString();
-
-        if(totalCount >= 8)
+        for (int i = 0; i < 8; i++)
         {
-            onMaxValue.Invoke();
+            totalCount += diceGuaranteeCount[i];
         }
-        else if(totalCount <= 0)
+        countText.text = totalCount.ToString();
+
+        UpdateUIElement();
+        UpdateGuarantee();
+    }
+
+    public void UpdateUIElement()
+    {
+        foreach (var ui in diceElementList)
         {
-            onMinValue.Invoke();
+            ui.UpdateUI();
+        } 
+    }
+
+    /// <summary>
+    /// Put the needed dice into the DiceManager
+    /// </summary>
+    public void UpdateGuarantee()
+    {
+        int diceCount = diceManager.generateAmount - 1;
+
+        //For every diceGuarantee on the list
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < diceGuaranteeCount[i]; j++)
+            {
+                diceManager.targetedResult[diceCount] = (Elements)i;
+                diceCount--;
+            }
         }
-        else
+
+        //Fill the rest with Any dice
+        for (int i = diceCount; i > 0; i--)
         {
-            onNormalValue.Invoke();
+            diceManager.targetedResult[i] = Elements.Any;
         }
     }
-}
-
-public struct DiceGuaranteeCount
-{
-    public int Cryo;
-    public int Dendro;
-    public int Electro;
-    public int Anemo;
-    public int Omni;
-    public int Geo;
-    public int Pyro;
-    public int Hydro;
 }
