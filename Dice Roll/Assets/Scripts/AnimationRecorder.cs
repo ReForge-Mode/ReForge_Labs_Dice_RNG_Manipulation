@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class AnimationRecorder : MonoBehaviour
 {
@@ -48,8 +47,11 @@ public class AnimationRecorder : MonoBehaviour
             Quaternion initialRotation = gameObject.transform.rotation;
 
             Rigidbody rb = gameObject.GetComponent<Rigidbody>();
+            rb.maxAngularVelocity = 1000;
 
-            recordingDataList.Add(new RecordingData(rb, initialPosition, initialRotation));
+            RecordingData data = new RecordingData(rb, initialPosition,
+                                                       initialRotation);
+            recordingDataList.Add(data);
         }
     }
 
@@ -65,11 +67,13 @@ public class AnimationRecorder : MonoBehaviour
             {
                 Vector3 position = objectsToRecord[j].transform.position;
                 Quaternion rotation = objectsToRecord[j].transform.rotation;
-                bool isContactWithArena = diceManager.diceDataList[j].diceUI.isContactWithArena;
+                bool isContactWithArena = diceManager.diceDataList[j].diceUI.isContactWithFloor;
                 bool isContactWithDice = diceManager.diceDataList[j].diceUI.isContactWithDice;
                 bool isNotMoving = CheckObjectHasStopped(diceManager.diceDataList[j].rb);
 
-                recordingDataList[j].recordedAnimation.Add(new RecordedFrame(position, rotation, isContactWithArena, isContactWithDice, isNotMoving));
+                RecordedFrame frame = new RecordedFrame(position, rotation, isContactWithArena,
+                                                        isContactWithDice, isNotMoving);
+                recordingDataList[j].recordedAnimation.Add(frame);
             }
             Physics.Simulate(Time.fixedDeltaTime);
         }
@@ -171,7 +175,8 @@ public class AnimationRecorder : MonoBehaviour
     /// <returns></returns>
     public bool CheckObjectHasStopped(Rigidbody rb)
     {
-        if (rb.velocity == Vector3.zero && rb.angularVelocity == Vector3.zero)
+        if (rb.velocity == Vector3.zero &&
+            rb.angularVelocity == Vector3.zero)
         {
             return true;
         }
@@ -217,7 +222,9 @@ public class AnimationRecorder : MonoBehaviour
         public bool isContactWithDice;
         public bool isNotMoving;
 
-        public RecordedFrame(Vector3 position, Quaternion rotation, bool isContactWithArena, bool isContactWithDice, bool isNotMoving)
+        public RecordedFrame(Vector3 position, Quaternion rotation,
+                             bool isContactWithArena, bool isContactWithDice,
+                             bool isNotMoving)
         {
             this.position = position;
             this.rotation = rotation;
@@ -235,7 +242,8 @@ public class AnimationRecorder : MonoBehaviour
         public Quaternion initialRotation;
         public List<RecordedFrame> recordedAnimation;
 
-        public RecordingData(Rigidbody rb, Vector3 initialPosition, Quaternion initialRotation)
+        public RecordingData(Rigidbody rb, Vector3 initialPosition,
+                             Quaternion initialRotation)
         {
             this.rb = rb;
             this.initialPosition = initialPosition;

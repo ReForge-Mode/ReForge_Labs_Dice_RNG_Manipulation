@@ -52,7 +52,6 @@ public class Dice : MonoBehaviour
     /// <summary>
     /// Find the result of the roll, the topmost face of the dice
     /// </summary>
-    /// <returns></returns>
     public int FindFaceResult()
     {
         //Since we have all child objects for each face,
@@ -60,7 +59,8 @@ public class Dice : MonoBehaviour
         int maxIndex = 0;
         for (int i = 1; i < faceDetectors.Length; i++)
         {
-            if (faceDetectors[maxIndex].transform.position.y < faceDetectors[i].transform.position.y)
+            if (faceDetectors[maxIndex].transform.position.y <
+                faceDetectors[i].transform.position.y)
             {
                 maxIndex = i;
             }

@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class DiceUI : MonoBehaviour
 {
     [Header("States")]
-    public bool isContactWithArena;
+    public bool isContactWithFloor;
     public bool isContactWithDice;
     public bool isInSimulation = true;
     public bool isNotMoving = false;
@@ -16,8 +17,12 @@ public class DiceUI : MonoBehaviour
     public Dice diceLogic;
     public MeshRenderer meshRenderer;
     public AudioSource soundLit;
-    public AudioSource soundRollLow;
-    public AudioSource soundRollHigh;
+
+    [FormerlySerializedAs("soundCollideFloor")]
+    public AudioSource soundCollideFloor;
+
+    [FormerlySerializedAs("soundCollideDice")]
+    public AudioSource soundCollideDice;
 
     /// <summary>
     /// For a possible object pooling system,
@@ -26,7 +31,7 @@ public class DiceUI : MonoBehaviour
     public void Reset()
     {
         ResetTexturetoUnlit();
-        isContactWithArena = false;
+        isContactWithFloor = false;
         isContactWithDice = false;
         isInSimulation = true;
         isNotMoving = false;
@@ -42,7 +47,6 @@ public class DiceUI : MonoBehaviour
             isTextureLit = true;
         }
     }
-
 
     #region Texture-Related Functions
     /// <summary>
@@ -111,19 +115,21 @@ public class DiceUI : MonoBehaviour
     //when the sound should be played
     public void PlaySoundRollLow()
     {
-        if (!soundRollLow.isPlaying) soundRollLow.Play();
+        if (!soundCollideFloor.isPlaying)
+             soundCollideFloor.Play();
     }
 
     public void PlaySoundRollHigh()
     {
-        if (!soundRollHigh.isPlaying) soundRollHigh.Play();
+        if (!soundCollideDice.isPlaying)
+             soundCollideDice.Play();
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.transform.CompareTag("Arena"))
+        if (collision.transform.CompareTag("Floor"))
         {
-            isContactWithArena = true;
+            isContactWithFloor = true;
         }
 
         if (collision.transform.CompareTag("Dice"))
@@ -134,9 +140,22 @@ public class DiceUI : MonoBehaviour
 
     private void OnCollisionStay(Collision collision)
     {
-        if (collision.transform.CompareTag("Arena"))
+        if (collision.transform.CompareTag("Floor"))
         {
-            isContactWithArena = false;
+            isContactWithFloor = false;
+        }
+
+        if (collision.transform.CompareTag("Dice"))
+        {
+            isContactWithDice = false;
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.transform.CompareTag("Floor"))
+        {
+            isContactWithFloor = false;
         }
 
         if (collision.transform.CompareTag("Dice"))

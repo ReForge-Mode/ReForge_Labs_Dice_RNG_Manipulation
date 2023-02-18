@@ -55,7 +55,8 @@ public class DiceManager2 : MonoBehaviour
         else if(count < diceDataList.Count)
         {
             int diceToDispose = diceDataList.Count - count;
-            for (int i = diceDataList.Count - diceToDispose - 1; i < diceDataList.Count; i++)
+            for (int i = diceDataList.Count - diceToDispose - 1;
+                     i < diceDataList.Count; i++)
             {
                 diceDataList[i].diceObject.transform.position = Vector3.down * 10000;
             }
@@ -80,15 +81,28 @@ public class DiceManager2 : MonoBehaviour
     private InitialState SetInitialState()
     {
         //Randomize X, Y, Z position in the bounding box
-        float x = transform.position.x + Random.Range(-transform.localScale.x / 2, transform.localScale.x / 2);
-        float y = transform.position.y + Random.Range(-transform.localScale.y / 2, transform.localScale.y / 2);
-        float z = transform.position.z + Random.Range(-transform.localScale.z / 2, transform.localScale.z / 2);
+        float x = transform.position.x + Random.Range(-transform.localScale.x / 2,
+                                                       transform.localScale.x / 2);
+        float y = transform.position.y + Random.Range(-transform.localScale.y / 2,
+                                                       transform.localScale.y / 2);
+        float z = transform.position.z + Random.Range(-transform.localScale.z / 2,
+                                                       transform.localScale.z / 2);
         Vector3 position = new Vector3(x, y, z);
 
-        //Randomize initial rotation
-        Quaternion rotation = Quaternion.Euler(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360));
-        Vector3 force = new Vector3(Random.Range(0, 25), -Random.Range(0, 25), Random.Range(0, 25));
-        Vector3 torque = new Vector3(Random.Range(0, 50), Random.Range(0, 50), Random.Range(50, 50));
+        x = Random.Range(0, 360);
+        y = Random.Range(0, 360);
+        z = Random.Range(0, 360);
+        Quaternion rotation = Quaternion.Euler(x, y, z);
+
+        x = Random.Range(0, 25);
+        y = Random.Range(0, 25);
+        z = Random.Range(0, 25);
+        Vector3 force = new Vector3(x, -y, z);
+
+        x = Random.Range(0, 50);
+        y = Random.Range(0, 50);
+        z = Random.Range(0, 50);
+        Vector3 torque = new Vector3(x, y, z);
 
         return new InitialState(position, rotation, force, torque);
     }
@@ -126,7 +140,8 @@ public class DiceManager2 : MonoBehaviour
         public Vector3 force;
         public Vector3 torque;
 
-        public InitialState(Vector3 position, Quaternion rotation, Vector3 force, Vector3 torque)
+        public InitialState(Vector3 position, Quaternion rotation,
+                            Vector3 force, Vector3 torque)
         {
             this.position = position;
             this.rotation = rotation;

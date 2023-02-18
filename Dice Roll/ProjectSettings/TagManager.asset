@@ -4,8 +4,8 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Arena
   - Dice
+  - Floor
   layers:
   - Default
   - TransparentFX
